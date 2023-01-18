@@ -1,6 +1,7 @@
 console.log("HI!");
 
 const getCountryByName = async (countryName) => {
+    
     // Fetch array
     const countryArray = await fetch(`https://restcountries.com/v3.1/name/${countryName}`)
     .then((response) => {return response.json()})
@@ -9,7 +10,16 @@ const getCountryByName = async (countryName) => {
     for (let i = 0; i < countryArray.length; i++) {
         createCountryCard(countryArray[i]);
     }
+    
+};
 
+const getAllCountries = async () => {
+    const countries = await fetch("https://restcountries.com/v3.1/all")
+    .then((response) => {return response.json()})
+
+    for (let i = 0; i < countries.length; i++) {
+        createCountryCard(countries[i]);
+    }
 };
 
 const createCountryCard = (country) => {
@@ -26,28 +36,29 @@ const createCountryCard = (country) => {
     const countryPopulation = document.createElement("li");
     
     //Assign values
-    countryDiv.class = commonName;
+    countryDiv.id = commonName;
     countryFlag.src = flagImage;
     countryHead.textContent = commonName;
     countryPopulation.textContent = "Population: " + population;
 
-    //Append elements and final HTML
+    //Append elements 
     countryDetails.appendChild(countryPopulation);
     countryDiv.appendChild(countryFlag);
     countryDiv.appendChild(countryHead);
     countryDiv.appendChild(countryDetails);
+
+    //Append list to final HTML
     document.querySelector(".countries").appendChild(countryDiv);
 };
 
-const getAllCountries = async () => {
-    const countries = await fetch("https://restcountries.com/v3.1/all")
-    .then((response) => {return response.json()})
+getAllCountries();
 
-    for (let i = 0; i < countries.length; i++) {
-        createCountryCard(countries[i]);
-    }
+handleCountrySearchForm = (event) => {
+    event.preventDefault();
+    const countrySection = document.querySelector(".countries");
+    countrySection.innerHTML = [];
+    getCountryByName(event.target.countrySearch.value);
 };
 
-// getCountryByName("hungary");
-
-getAllCountries();
+const searchCountryForm = document.querySelector("#countryForm");
+searchCountryForm.addEventListener("submit", handleCountrySearchForm);
