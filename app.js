@@ -1,6 +1,5 @@
 console.log("HI!");
 
-const countryPromises = [];
 const getCountryByName = async (countryName) => {
     // Fetch array
     const countryArray = await fetch(`https://restcountries.com/v3.1/name/${countryName}`)
@@ -9,11 +8,24 @@ const getCountryByName = async (countryName) => {
     // Find the country based on search
     let country;
     for (let i = 0; i < countryArray.length; i++) {
-        if (countryArray[i].name.common.toLowerCase() === countryName.toLowerCase()) {
-            country = countryArray[i];
-        }
+        const commonName = countryArray[i].name.common;
+        const flagImage = countryArray[i].flags.png;
+
+        const countryDiv = document.createElement("div");
+        const countryFlag = document.createElement("img");
+        const countryHead = document.createElement("h2");
+
+        countryDiv.class = commonName;
+        countryFlag.src = flagImage;
+        countryHead.textContent = commonName;
+        
+        countryDiv.appendChild(countryFlag);
+        countryDiv.appendChild(countryHead);
+        document.querySelector(".countries").appendChild(countryDiv);
+        
     }
     console.log(country);
+
 };
 
 getCountryByName("united");
