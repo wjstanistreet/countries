@@ -6,32 +6,48 @@ const getCountryByName = async (countryName) => {
     .then((response) => {return response.json()})
     
     // Find the country based on search
-    let country;
     for (let i = 0; i < countryArray.length; i++) {
-        const commonName = countryArray[i].name.common;
-        const flagImage = countryArray[i].flags.png;
-        const population = countryArray[i].population;
-
-        const countryDiv = document.createElement("div");
-        const countryFlag = document.createElement("img");
-        const countryHead = document.createElement("h2");
-        const countryDetails = document.createElement("ul");
-        const countryPopulation = document.createElement("li");
-        
-        countryDiv.class = commonName;
-        countryFlag.src = flagImage;
-        countryHead.textContent = commonName;
-        countryPopulation.textContent = "Population: " + population;
-
-        countryDetails.appendChild(countryPopulation);
-        countryDiv.appendChild(countryFlag);
-        countryDiv.appendChild(countryHead);
-        countryDiv.appendChild(countryDetails);
-        document.querySelector(".countries").appendChild(countryDiv);
-        
-        console.log(countryArray[i]);
+        createCountryCard(countryArray[i]);
     }
 
 };
 
-getCountryByName("hungary");
+const createCountryCard = (country) => {
+    //Extract country information from the array
+    const commonName = country.name.common;
+    const flagImage = country.flags.png;
+    const population = country.population;
+
+    //Create elements for country card
+    const countryDiv = document.createElement("div");
+    const countryFlag = document.createElement("img");
+    const countryHead = document.createElement("h2");
+    const countryDetails = document.createElement("ul");
+    const countryPopulation = document.createElement("li");
+    
+    //Assign values
+    countryDiv.class = commonName;
+    countryFlag.src = flagImage;
+    countryHead.textContent = commonName;
+    countryPopulation.textContent = "Population: " + population;
+
+    //Append elements and final HTML
+    countryDetails.appendChild(countryPopulation);
+    countryDiv.appendChild(countryFlag);
+    countryDiv.appendChild(countryHead);
+    countryDiv.appendChild(countryDetails);
+    document.querySelector(".countries").appendChild(countryDiv);
+};
+
+const getAllCountries = async () => {
+    const countries = await fetch("https://restcountries.com/v3.1/all")
+    .then((response) => {return response.json()})
+
+    for (let i = 0; i < countries.length; i++) {
+        createCountryCard(countries[i]);
+    }
+};
+
+// getCountryByName("hungary");
+
+getAllCountries();
